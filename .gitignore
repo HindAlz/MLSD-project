@@ -1,0 +1,16 @@
+.venv/
+
+__pycache__/
+*.pyc
+
+.vscode/
+
+mlruns/
+mlflow.db
+
+outputs/
+
+data/
+
+.DS_Store
+Thumbs.db
