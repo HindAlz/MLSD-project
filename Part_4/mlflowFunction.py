@@ -28,9 +28,11 @@ from imblearn.under_sampling import RandomUnderSampler
 
 def log_model_run(model_name, model, results, X, y, method_name=None):
     mlflow.utils.logging_utils.disable_logging()
+
     with mlflow.start_run(run_name=model_name):
         mlflow.log_param("model_name", model_name)
         mlflow.log_param("model_class", model.__class__.__name__)
+
         if method_name:
             mlflow.log_param("method", method_name)
 
@@ -42,12 +44,6 @@ def log_model_run(model_name, model, results, X, y, method_name=None):
         mlflow.log_metric("cv_recall", float(results["recall"]))
         mlflow.log_metric("cv_precision", float(results["precision"]))
 
-        if isinstance(model, XGBClassifier):
-            mlflow.xgboost.log_model(model, name="model")
-        elif isinstance(model, LGBMClassifier):
-            mlflow.lightgbm.log_model(model, name="model")
-        else:
-            mlflow.sklearn.log_model(model, name="model")
 
 
 def evaluate_model(X, y, name, model, preprocess_fn):
