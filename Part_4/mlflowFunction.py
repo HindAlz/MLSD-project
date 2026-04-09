@@ -45,6 +45,10 @@ def log_model_run(model_name, model, results, X, y, method_name=None):
         mlflow.log_metric("cv_precision", float(results["precision"]))
 
 
+from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_score
+from sklearn.model_selection import StratifiedKFold
+from sklearn.base import clone
+import numpy as np
 
 def evaluate_model(X, y, name, model, preprocess_fn):
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=10)
@@ -64,7 +68,7 @@ def evaluate_model(X, y, name, model, preprocess_fn):
             X_train_fold, X_valid_fold, y_train_fold
         )
 
-        fold_model = model.__class__(**model.get_params())
+        fold_model = clone(model)
 
         if class_weight is not None and "class_weight" in fold_model.get_params():
             fold_model.set_params(class_weight=class_weight)
