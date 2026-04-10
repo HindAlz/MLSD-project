@@ -26,7 +26,7 @@ from imblearn.under_sampling import RandomUnderSampler
 
     
 
-def log_model_run(model_name, model, results, X, y, method_name=None):
+def log_model_run(model_name, model, results, method_name=None):
     mlflow.utils.logging_utils.disable_logging()
 
     with mlflow.start_run(run_name=model_name):
