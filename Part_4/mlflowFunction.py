@@ -1,30 +1,21 @@
-from lightgbm import LGBMClassifier
 from sklearn.model_selection import StratifiedKFold
-from xgboost import XGBClassifier
 import mlflow
-import mlflow.sklearn
-import mlflow.xgboost
-import mlflow.lightgbm
-
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_score
 import numpy as np
-
-
 import pandas as pd
 import numpy as np
-
-from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
-
 from imblearn.over_sampling import RandomOverSampler, SMOTE
 from imblearn.under_sampling import RandomUnderSampler
+from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_score
+from sklearn.model_selection import StratifiedKFold
+from sklearn.base import clone
+import numpy as np
 
-
-    
 
 def log_model_run(model_name, model, results, method_name=None):
     mlflow.utils.logging_utils.disable_logging()
@@ -45,10 +36,6 @@ def log_model_run(model_name, model, results, method_name=None):
         mlflow.log_metric("cv_precision", float(results["precision"]))
 
 
-from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_score
-from sklearn.model_selection import StratifiedKFold
-from sklearn.base import clone
-import numpy as np
 
 def evaluate_model(X, y, name, model, preprocess_fn):
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=10)
@@ -99,11 +86,7 @@ def evaluate_model(X, y, name, model, preprocess_fn):
     return results
 
 # Load the dataset
-train = pd.read_parquet('C:\\Users\\Hzaab\\Desktop\\MLSD project\\data\\preprocessed\\train.parquet', engine='fastparquet')
-
-log_cols = ["#follows", "#followers", "description length", "#posts"]
-for col in log_cols:
-    train[col] = np.log1p(train[col])
+train = pd.read_parquet('C:\\Users\\Hzaab\\Desktop\\MLSD project\\data\\preprocessed\\train.parquet')
 
 categorical_cols = ["profile pic", "name==username", "external URL", "private"]
 numeric_columns = [col for col in train.columns if col not in categorical_cols and col != "fake"]
@@ -173,16 +156,6 @@ def apply_random_undersample(X_train_fold, X_valid_fold, y_train_fold):
 
     return X_train_resampled, X_valid_processed, y_train_resampled, None
 
-
-
-#import mlflow
-#from mlflowFunction import log_model_run
-
-#mlflow.set_tracking_uri("http://127.0.0.1:5000")
-#print("Tracking URI:", mlflow.get_tracking_uri())
-#mlflow.set_experiment("Model Development")
-#import mlflow
-#mlflow.utils.logging_utils.disable_logging()
 
 
 def make_preprocessor(X):
